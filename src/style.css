@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+  /* Light Mode Palette */
+  --color-brand-blue: #2e6eb6;
+  --color-brand-blue-hover: #1e4d88;
+  --color-brand-subtle: #ebf3fc;
+  --color-brand-bg-light: #f8fafc;
+  --color-brand-text-dark: #1a202c;
+  --color-brand-text-muted: #4a5568;
+
+  /* Dark Mode Palette */
+  --color-brand-accent: #4b8cd6;
+  --color-brand-accent-hover: #3274be;
+  --color-brand-deep-tint: #1a2e4c;
+  --color-brand-bg-dark: #0d1726;
+  --color-brand-text-light: #f8fafc;
+  --color-brand-text-muted-dark: #8a99ad;
+}
