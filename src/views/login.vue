@@ -13,7 +13,7 @@
         <label for="email">email</label>
         <input
           v-model="email"
-          type="text"
+          type="email"
           name="email"
           id="email"
           class="border p-2 rounded w-full"
@@ -53,9 +53,20 @@ const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-// only enable the login button if both email and password are not empty
+// Email validation check -> using standard format or not (user@domain.ext)
+const isEmailValid = computed(() => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email.value.trim());
+});
+
+// Password validation: minimum 8 characters
+const isPasswordValid = computed(() => {
+  return password.value.length >= 8;
+});
+
+// Only enable the login button if email format is valid and password is at least 8 characters
 const isFormValid = computed(() => {
-  return email.value.trim().length > 0 && password.value.trim().length > 0;
+  return isEmailValid.value && isPasswordValid.value;
 });
 
 function handleLogin() {
