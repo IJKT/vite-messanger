@@ -1,14 +1,3 @@
-<script setup lang="ts">
-import { ref, computed } from "vue";
-
-const email = ref("");
-const password = ref("");
-
-const isFormValid = computed(() => {
-  return email.value.trim().length > 0 && password.value.trim().length > 0;
-});
-</script>
-
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen p-4 gap-4">
     <!-- Application Logo -->
@@ -44,12 +33,35 @@ const isFormValid = computed(() => {
       </div>
       <button
         :disabled="!isFormValid"
+        @click="handleLogin"
         class="bg-brand-blue text-white font-bold p-2 rounded w-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-brand-blue cursor-pointer hover:bg-brand-blue-hover"
       >
-        login
+        LOGIN
       </button>
     </div>
   </div>
 </template>
 
 <style lang="postcss" scoped></style>
+
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+
+// only enable the login button if both email and password are not empty
+const isFormValid = computed(() => {
+  return email.value.trim().length > 0 && password.value.trim().length > 0;
+});
+
+function handleLogin() {
+  if (isFormValid.value) {
+    // TODO: Perform login logic here (e.g., API call)
+    router.push({ name: "ChatList" });
+  }
+}
+</script>

@@ -39,7 +39,7 @@ Contoh desain aplikasi: https://gradin.co.id/test/vue/mockup
 - defineEmits
 - computed
 - watch
-- vue router
+- vue router ✅
 - pinia
 
 ## Nilai tambah jika bisa:
