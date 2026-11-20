@@ -6,92 +6,100 @@
     <div
       class="w-full max-w-md min-h-screen flex flex-col bg-white border-x border-slate-200/80 shadow-sm"
     >
-      <!-- HEADER -->
+      <!-- HEADER (Fixed height to prevent any layout shift) -->
       <header
-        class="flex items-center justify-between px-5 py-3.5 border-b border-slate-200/80 sticky top-0 bg-white/95 backdrop-blur z-20"
+        class="h-[60px] px-4 border-b border-slate-200/80 sticky top-0 bg-white/95 backdrop-blur z-20 flex items-center justify-between gap-3"
       >
-        <!-- Application Logo using Message Icon.png -->
-        <div class="flex items-center gap-2.5">
-          <img
-            src="../images/Message Icon.png"
-            alt="Application Logo"
-            class="w-9 h-9 object-contain"
-          />
-          <h1
-            class="text-lg font-bold tracking-tight text-brand-text-dark select-none"
-          >
-            Messenger App
-          </h1>
-        </div>
-
-        <div class="flex items-center gap-1">
-          <!-- Search Button -->
-          <button
-            type="button"
-            @click="toggleSearch"
-            title="Search chats"
-            class="p-2 rounded-full text-brand-text-muted hover:text-brand-blue hover:bg-brand-subtle transition-colors focus:outline-none"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
+        <!-- LEFT AREA: Closed -> Logo & Title; Open -> Search Bar Input -->
+        <div class="flex-1 min-w-0 flex items-center">
+          <!--Close -> Default Header State -->
+          <div v-if="!isSearchOpen" class="flex items-center gap-2.5">
+            <img
+              src="../images/Message Icon.png"
+              alt="Application Logo"
+              class="w-9 h-9 object-contain"
+            />
+            <h1
+              class="text-lg font-bold tracking-tight text-brand-text-dark select-none"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-        </div>
-      </header>
+              Messenger App
+            </h1>
+          </div>
 
-      <!-- SEARCH & FILTER BAR -->
-      <transition
-        enter-active-class="transition-all duration-200 ease-out"
-        enter-from-class="max-h-0 opacity-0 -translate-y-2 overflow-hidden"
-        enter-to-class="max-h-20 opacity-100 translate-y-0 overflow-hidden"
-        leave-active-class="transition-all duration-150 ease-in"
-        leave-from-class="max-h-20 opacity-100 translate-y-0 overflow-hidden"
-        leave-to-class="max-h-0 opacity-0 -translate-y-2 overflow-hidden"
-      >
-        <div
-          v-if="isSearchOpen"
-          class="px-5 py-2.5 bg-brand-subtle/50 border-b border-slate-200"
-        >
-          <div class="relative flex items-center">
+          <!-- Open -> Search Input Bar -->
+          <div v-else class="relative w-full flex items-center">
+            <!-- Search Input -->
             <input
               ref="searchInputRef"
               v-model="searchQuery"
               type="text"
-              placeholder="Search by name or message..."
-              class="w-full pl-3.5 pr-8 py-2 bg-white border border-slate-300 rounded-lg text-sm text-brand-text-dark placeholder:text-brand-text-muted focus:outline-none focus:border-brand-blue focus:ring-1 focus:ring-brand-blue transition-colors"
+              placeholder="Search by contact name..."
+              @keydown.esc="closeSearch"
+              class="w-full pl-3.5 pr-3 py-2 bg-slate-100 hover:bg-slate-100/90 focus:bg-white border border-transparent focus:border-brand-blue/30 rounded-xl text-sm text-brand-text-dark placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-blue/20 transition-all"
             />
-            <button
-              v-if="searchQuery"
-              @click="searchQuery = ''"
-              type="button"
-              class="absolute right-2.5 text-brand-text-muted hover:text-brand-text-dark text-xs p-1"
-            >
-              ✕
-            </button>
           </div>
         </div>
-      </transition>
 
-      <!-- CHAT LIST -->
-      <div class="flex-1 overflow-y-auto divide-y divide-slate-100">
+        <!-- RIGHT AREA: Close -> Magnifying Glass Open -> Close button-->
+        <!-- Magnifying Glass -->
+        <button
+          v-if="!isSearchOpen"
+          type="button"
+          @click="openSearch"
+          class="p-2 rounded-full text-slate-500 hover:text-brand-blue hover:bg-brand-subtle transition-colors cursor-pointer focus:outline-none shrink-0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </button>
+
+        <!-- Close Button -->
+        <button
+          v-else
+          type="button"
+          @click="handleClearOrClose"
+          class="p-2 rounded-full text-slate-500 hover:text-brand-blue hover:bg-brand-subtle transition-colors cursor-pointer focus:outline-none shrink-0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </header>
+
+      <!-- Chat list -->
+      <div
+        class="flex-1 overflow-y-auto divide-y divide-slate-100 flex flex-col"
+      >
+        <!-- Contact Rows -->
         <div
           v-for="chat in filteredChats"
           :key="chat.id"
           @click="selectChat(chat)"
           class="flex items-center gap-3.5 px-5 py-3.5 hover:bg-brand-subtle/40 active:bg-brand-subtle/70 cursor-pointer transition-colors"
         >
-          <!-- AVATAR PROFILE PICTURE (Powered by https://randomuser.me) -->
+          <!-- Random Profile Pictures -->
           <div class="relative shrink-0">
             <div
               class="w-13 h-13 rounded-full overflow-hidden bg-brand-subtle border border-slate-200 flex items-center justify-center shadow-sm"
@@ -109,17 +117,13 @@
                 {{ getInitials(chat.name) }}
               </span>
             </div>
-            <!-- Online status indicator -->
-            <span
-              v-if="chat.isOnline"
-              class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"
-            ></span>
           </div>
 
           <!-- CHAT METADATA -->
           <div class="flex-1 min-w-0 flex flex-col justify-center">
             <!-- Row 1: Contact Name & Timestamp -->
             <div class="flex items-baseline justify-between gap-2 mb-1">
+              <!-- Contact Name -->
               <h2
                 class="text-[16px] font-bold text-brand-text-dark truncate leading-tight"
               >
@@ -159,7 +163,7 @@
                 <span class="truncate">{{ chat.lastMessage }}</span>
               </p>
 
-              <!-- Unread badge (Styled in brand-blue light palette) -->
+              <!-- Unread badge -->
               <span
                 v-if="chat.unreadCount && chat.unreadCount > 0"
                 class="min-w-5 h-5 px-1.5 flex items-center justify-center rounded-full bg-brand-blue text-white text-xs font-bold shrink-0 leading-none shadow-sm"
@@ -170,35 +174,12 @@
           </div>
         </div>
 
-        <!-- EMPTY STATE (When search query has no match) -->
+        <!-- EMPTY STATE (Exact wireframe: Centered 'No results found') -->
         <div
           v-if="filteredChats.length === 0"
-          class="flex flex-col items-center justify-center py-16 text-center text-brand-text-muted gap-3"
+          class="flex-1 flex flex-col items-center justify-center py-28 px-6 text-center select-none"
         >
-          <div
-            class="w-12 h-12 rounded-full bg-brand-subtle flex items-center justify-center"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6 text-brand-text-muted"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-4.35-4.35m1.85-5.65a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <p class="text-sm font-semibold text-brand-text-dark">
-            No chats found
-          </p>
-          <p class="text-xs text-brand-text-muted max-w-xs">
-            We couldn't find any chats matching "{{ searchQuery }}"
-          </p>
+          <p class="text-base font-semibold text-slate-500">No results found</p>
         </div>
       </div>
     </div>
@@ -220,8 +201,7 @@ export interface ChatItem {
   isOnline?: boolean;
 }
 
-// Pre-seeded chat contacts modeled directly after the user's reference mockup
-// Direct portrait URLs from randomuser.me are used for instantaneous rendering
+// Contacts seeded with at least 20 items to satisfy the README specification
 const chats = ref<ChatItem[]>([
   {
     id: 1,
@@ -259,35 +239,196 @@ const chats = ref<ChatItem[]>([
     unreadCount: 0,
     isSentByMe: false,
   },
+  {
+    id: 5,
+    name: "Scarlett Johansson",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    lastMessage: "See you tomorrow at the studio!",
+    timestamp: "28 Sep",
+    unreadCount: 1,
+    isSentByMe: false,
+  },
+  {
+    id: 6,
+    name: "Benedict Cumberbatch",
+    avatar: "https://randomuser.me/api/portraits/men/52.jpg",
+    lastMessage: "The script looks brilliant.",
+    timestamp: "25 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 7,
+    name: "Chris Evans",
+    avatar: "https://randomuser.me/api/portraits/men/76.jpg",
+    lastMessage: "Avengers, assemble!",
+    timestamp: "22 Sep",
+    unreadCount: 0,
+    isSentByMe: true,
+  },
+  {
+    id: 8,
+    name: "Elizabeth Olsen",
+    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+    lastMessage: "Let me know when you're free to chat.",
+    timestamp: "20 Sep",
+    unreadCount: 3,
+    isSentByMe: false,
+  },
+  {
+    id: 9,
+    name: "Chadwick Boseman",
+    avatar: "https://randomuser.me/api/portraits/men/82.jpg",
+    lastMessage: "Wakanda forever! Talk soon.",
+    timestamp: "18 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 10,
+    name: "Paul Rudd",
+    avatar: "https://randomuser.me/api/portraits/men/33.jpg",
+    lastMessage: "Wait, you're not going to believe what happened.",
+    timestamp: "15 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 11,
+    name: "Zoe Saldana",
+    avatar: "https://randomuser.me/api/portraits/women/24.jpg",
+    lastMessage: "Sounds like a solid plan!",
+    timestamp: "12 Sep",
+    unreadCount: 0,
+    isSentByMe: true,
+  },
+  {
+    id: 12,
+    name: "Chris Pratt",
+    avatar: "https://randomuser.me/api/portraits/men/48.jpg",
+    lastMessage: "Awesome Mix Vol 3 is ready!",
+    timestamp: "10 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 13,
+    name: "Tom Hiddleston",
+    avatar: "https://randomuser.me/api/portraits/men/91.jpg",
+    lastMessage: "I assure you, the sun will shine on us again.",
+    timestamp: "8 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 14,
+    name: "Jeremy Renner",
+    avatar: "https://randomuser.me/api/portraits/men/61.jpg",
+    lastMessage: "Target acquired. Moving in shortly.",
+    timestamp: "5 Sep",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 15,
+    name: "Samuel L. Jackson",
+    avatar: "https://randomuser.me/api/portraits/men/71.jpg",
+    lastMessage: "I have an idea for an initiative.",
+    timestamp: "1 Sep",
+    unreadCount: 0,
+    isSentByMe: true,
+  },
+  {
+    id: 16,
+    name: "Brie Larson",
+    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    lastMessage: "Higher, further, faster!",
+    timestamp: "28 Aug",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 17,
+    name: "Anthony Mackie",
+    avatar: "https://randomuser.me/api/portraits/men/19.jpg",
+    lastMessage: "On your left!",
+    timestamp: "24 Aug",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 18,
+    name: "Sebastian Stan",
+    avatar: "https://randomuser.me/api/portraits/men/29.jpg",
+    lastMessage: "I remember everything.",
+    timestamp: "20 Aug",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 19,
+    name: "Florence Pugh",
+    avatar: "https://randomuser.me/api/portraits/women/54.jpg",
+    lastMessage: "Great work today! Let's celebrate.",
+    timestamp: "15 Aug",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 20,
+    name: "Karen Gillan",
+    avatar: "https://randomuser.me/api/portraits/women/79.jpg",
+    lastMessage: "Affirmative. Ready when you are.",
+    timestamp: "10 Aug",
+    unreadCount: 0,
+    isSentByMe: false,
+  },
+  {
+    id: 21,
+    name: "Simu Liu",
+    avatar: "https://randomuser.me/api/portraits/men/15.jpg",
+    lastMessage: "Ten rings, ten times the fun.",
+    timestamp: "5 Aug",
+    unreadCount: 0,
+    isSentByMe: true,
+  },
 ]);
 
-// Search and filter state
+// Search state
 const isSearchOpen = ref(false);
 const searchQuery = ref("");
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const isLoadingAvatars = ref(false);
 
-function toggleSearch() {
-  isSearchOpen.value = !isSearchOpen.value;
-  if (isSearchOpen.value) {
-    nextTick(() => {
-      searchInputRef.value?.focus();
-    });
-  } else {
-    searchQuery.value = "";
-  }
-}
-
-// Real-time filter by name or message
+// Real-time filter based on every typedown keystroke (strictly matching contact name)
 const filteredChats = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
   if (!query) return chats.value;
-  return chats.value.filter(
-    (chat) =>
-      chat.name.toLowerCase().includes(query) ||
-      chat.lastMessage.toLowerCase().includes(query),
+  return chats.value.filter((chat: ChatItem) =>
+    chat.name.toLowerCase().includes(query),
   );
 });
+
+function openSearch() {
+  isSearchOpen.value = true;
+  nextTick(() => {
+    searchInputRef.value?.focus();
+  });
+}
+
+function closeSearch() {
+  isSearchOpen.value = false;
+  searchQuery.value = "";
+}
+
+function handleClearOrClose() {
+  if (searchQuery.value) {
+    searchQuery.value = "";
+    searchInputRef.value?.focus();
+  } else {
+    closeSearch();
+  }
+}
 
 // Fallback initials generator
 function getInitials(name: string): string {
@@ -305,7 +446,7 @@ function selectChat(chat: ChatItem) {
   }
 }
 
-// Fetch random profile pictures from https://randomuser.me API
+// Random avatar fetching with graceful fallback
 async function fetchRandomUserAvatars() {
   if (isLoadingAvatars.value) return;
   isLoadingAvatars.value = true;
@@ -333,7 +474,7 @@ async function fetchRandomUserAvatars() {
     }
   } catch (error) {
     console.warn(
-      "Could not reach randomuser.me API, keeping current avatars:",
+      "Could not reach randomuser.me API, using seeded avatars:",
       error,
     );
   } finally {
