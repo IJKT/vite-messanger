@@ -1,5 +1,3 @@
-import { ref, computed, onMounted, nextTick } from "vue";
-
 export interface ChatItem {
   id: number;
   name: string;
