@@ -9,12 +9,28 @@ export interface ChatItem {
   isSentByMe?: boolean;
   isOnline?: boolean;
 }
+
+// Generate unique randomized avatars from randomuser.me (1-99) on each page load/refresh
+function createAvatarGenerator(gender: "men" | "women") {
+  const pool = Array.from({ length: 99 }, (_, i) => i + 1).sort(
+    () => Math.random() - 0.5,
+  );
+  let index = 0;
+  return () => {
+    const id = pool[index++ % pool.length];
+    return `https://randomuser.me/api/portraits/${gender}/${id}.jpg`;
+  };
+}
+
+const getMenAvatar = createAvatarGenerator("men");
+const getWomenAvatar = createAvatarGenerator("women");
+
 // Contacts seeded with at least 20 items to satisfy the README specification
 export const dummyChats: ChatItem[] = [
   {
     id: 1,
     name: "Tom Holland",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Thank you man, appreciate it",
     timestamp: "just now",
     unreadCount: 2,
@@ -23,7 +39,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 2,
     name: "Robert Downey JR",
-    avatar: "https://randomuser.me/api/portraits/men/44.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Hey, bro. How you doing? I heard that you jus...",
     timestamp: "13:30",
     unreadCount: 0,
@@ -32,7 +48,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 3,
     name: "Mark Ruffalo",
-    avatar: "https://randomuser.me/api/portraits/men/68.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Alright. I'll keep you updated.",
     timestamp: "6 Oct",
     unreadCount: 0,
@@ -41,7 +57,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 4,
     name: "Chris Hemsworth",
-    avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Don't worry, I got this.",
     timestamp: "29 Sep",
     unreadCount: 0,
@@ -50,7 +66,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 5,
     name: "Scarlett Johansson",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "See you tomorrow at the studio!",
     timestamp: "28 Sep",
     unreadCount: 1,
@@ -59,7 +75,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 6,
     name: "Benedict Cumberbatch",
-    avatar: "https://randomuser.me/api/portraits/men/52.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "The script looks brilliant.",
     timestamp: "25 Sep",
     unreadCount: 0,
@@ -68,7 +84,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 7,
     name: "Chris Evans",
-    avatar: "https://randomuser.me/api/portraits/men/76.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Avengers, assemble!",
     timestamp: "22 Sep",
     unreadCount: 0,
@@ -77,7 +93,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 8,
     name: "Elizabeth Olsen",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "Let me know when you're free to chat.",
     timestamp: "20 Sep",
     unreadCount: 3,
@@ -86,7 +102,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 9,
     name: "Chadwick Boseman",
-    avatar: "https://randomuser.me/api/portraits/men/82.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Wakanda forever! Talk soon.",
     timestamp: "18 Sep",
     unreadCount: 0,
@@ -95,7 +111,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 10,
     name: "Paul Rudd",
-    avatar: "https://randomuser.me/api/portraits/men/33.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Wait, you're not going to believe what happened.",
     timestamp: "15 Sep",
     unreadCount: 0,
@@ -104,7 +120,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 11,
     name: "Zoe Saldana",
-    avatar: "https://randomuser.me/api/portraits/women/24.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "Sounds like a solid plan!",
     timestamp: "12 Sep",
     unreadCount: 0,
@@ -113,7 +129,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 12,
     name: "Chris Pratt",
-    avatar: "https://randomuser.me/api/portraits/men/48.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Awesome Mix Vol 3 is ready!",
     timestamp: "10 Sep",
     unreadCount: 0,
@@ -122,7 +138,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 13,
     name: "Tom Hiddleston",
-    avatar: "https://randomuser.me/api/portraits/men/91.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "I assure you, the sun will shine on us again.",
     timestamp: "8 Sep",
     unreadCount: 0,
@@ -131,7 +147,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 14,
     name: "Jeremy Renner",
-    avatar: "https://randomuser.me/api/portraits/men/61.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Target acquired. Moving in shortly.",
     timestamp: "5 Sep",
     unreadCount: 0,
@@ -140,7 +156,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 15,
     name: "Samuel L. Jackson",
-    avatar: "https://randomuser.me/api/portraits/men/71.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "I have an idea for an initiative.",
     timestamp: "1 Sep",
     unreadCount: 0,
@@ -149,7 +165,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 16,
     name: "Brie Larson",
-    avatar: "https://randomuser.me/api/portraits/women/12.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "Higher, further, faster!",
     timestamp: "28 Aug",
     unreadCount: 0,
@@ -158,7 +174,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 17,
     name: "Anthony Mackie",
-    avatar: "https://randomuser.me/api/portraits/men/19.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "On your left!",
     timestamp: "24 Aug",
     unreadCount: 0,
@@ -167,7 +183,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 18,
     name: "Sebastian Stan",
-    avatar: "https://randomuser.me/api/portraits/men/29.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "I remember everything.",
     timestamp: "20 Aug",
     unreadCount: 0,
@@ -176,7 +192,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 19,
     name: "Florence Pugh",
-    avatar: "https://randomuser.me/api/portraits/women/54.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "Great work today! Let's celebrate.",
     timestamp: "15 Aug",
     unreadCount: 0,
@@ -185,7 +201,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 20,
     name: "Karen Gillan",
-    avatar: "https://randomuser.me/api/portraits/women/79.jpg",
+    avatar: getWomenAvatar(),
     lastMessage: "Affirmative. Ready when you are.",
     timestamp: "10 Aug",
     unreadCount: 0,
@@ -194,7 +210,7 @@ export const dummyChats: ChatItem[] = [
   {
     id: 21,
     name: "Simu Liu",
-    avatar: "https://randomuser.me/api/portraits/men/15.jpg",
+    avatar: getMenAvatar(),
     lastMessage: "Ten rings, ten times the fun.",
     timestamp: "5 Aug",
     unreadCount: 0,
