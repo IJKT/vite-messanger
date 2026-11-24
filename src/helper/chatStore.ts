@@ -86,13 +86,15 @@ export const useChatStore = defineStore("chat", () => {
     }
     messages.value[chatId].push(newMsg);
 
-    // Update the chat list summary
-    const chat = getChatById(chatId);
-    if (chat) {
+    // Update the chat list summary and move to the top of the list
+    const chatIndex = chats.value.findIndex((c: ChatItem) => c.id === chatId);
+    if (chatIndex !== -1) {
+      const [chat] = chats.value.splice(chatIndex, 1);
       chat.lastMessage = trimmed;
       chat.timestamp = "just now";
       chat.isSentByMe = true;
       chat.unreadCount = 0;
+      chats.value.unshift(chat);
     }
   }
 

@@ -6,7 +6,6 @@ put all of the dummy contact names into one singular file
 
 -bikin chat details
 chat tiap orang ybs
-(optional)bisa kirim gambar
-(optional) chat list based on timestamp (paling baru, diatas)
+(optional) chat list based on timestamp (paling baru, diatas) [DONE]
 
 -bikin auth guard setelah semua jadi
