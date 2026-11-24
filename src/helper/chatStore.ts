@@ -1,16 +1,34 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { dummyChats, type ChatItem } from "./dummyData";
-import { dummyMessages as initialMessages, type Message } from "./messagesData";
+import { dummyMessages, type Message } from "./messagesData";
 import { loggedInUser, loggedInEmail } from "./user";
 
 export const useChatStore = defineStore("chat", () => {
   const currentUserEmail = loggedInEmail;
   const currentUserName = loggedInUser;
-  const chats = ref<ChatItem[]>(dummyChats);
+  const chats = ref<ChatItem[]>(dummyChats());
 
   // Initial messages map seeded from messagesData
-  const messages = ref<Record<number, Message[]>>(initialMessages);
+  const messages = ref<Record<number, Message[]>>(dummyMessages());
+
+  /**
+   * Watch loggedInUser
+   * signed in user stays in sync with the logged-in user name
+   */
+  watch(
+    loggedInUser,
+    (newName) => {
+      Object.values(messages.value).forEach((chatMessages) => {
+        chatMessages.forEach((msg) => {
+          if (msg.isSentByMe) {
+            msg.senderName = newName;
+          }
+        });
+      });
+    },
+    { immediate: true },
+  );
 
   function getChatById(id: number): ChatItem | undefined {
     return chats.value.find((c: ChatItem) => c.id === id);
@@ -34,6 +52,14 @@ export const useChatStore = defineStore("chat", () => {
         messages.value[chatId] = [];
       }
     }
+
+    // Ensure all outgoing messages by me have the latest logged in user's name
+    messages.value[chatId].forEach((msg) => {
+      if (msg.isSentByMe) {
+        msg.senderName = loggedInUser.value;
+      }
+    });
+
     return messages.value[chatId];
   }
 

@@ -80,7 +80,7 @@
             >
               <div class="flex items-baseline justify-between gap-3 mb-1">
                 <span class="text-xs font-semibold text-purple-200/90 truncate">
-                  {{ msg.senderName }}
+                  {{ loggedInUser }}
                 </span>
                 <span class="text-[11px] text-purple-200/70 shrink-0">
                   {{ msg.timestamp }}
@@ -164,6 +164,7 @@ import { ref, computed, onMounted, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { type Message } from "../helper/messagesData";
 import { useChatStore } from "../helper/chatStore";
+import { loggedInUser } from "../helper/user";
 
 const route = useRoute();
 const router = useRouter();
