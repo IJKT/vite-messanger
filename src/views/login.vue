@@ -141,9 +141,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { setLoggedInUser } from "../helper/user";
 
+const route = useRoute();
 const router = useRouter();
 
 const email = ref("");
@@ -170,7 +171,12 @@ const isFormValid = computed(() => {
 function handleLogin() {
   if (isFormValid.value) {
     setLoggedInUser(email.value);
-    router.push({ name: "ChatList" });
+    const redirectTarget =
+      typeof route.query.redirect === "string" &&
+      route.query.redirect.startsWith("/chat")
+        ? route.query.redirect
+        : null;
+    router.push(redirectTarget ?? { name: "ChatList" });
   }
 }
 </script>

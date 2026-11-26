@@ -1,11 +1,8 @@
 import { ref, computed } from "vue";
 
-// TODO: will be removed after implementing proper authentication and page guards
-export const DEFAULT_USER_EMAIL = "chris_evans@gmail.com";
-
 // Updates the logged in user with the email used during login
 export function setLoggedInUser(email?: string) {
-  loggedInEmail.value = email || DEFAULT_USER_EMAIL;
+  loggedInEmail.value = email?.trim() || "";
 }
 
 // Formats an email into a display username (Title Case)
@@ -23,9 +20,28 @@ export function formatUserNameFromEmail(email?: string): string {
 }
 
 // Reactive store of the logged-in user's email
-export const loggedInEmail = ref<string>(DEFAULT_USER_EMAIL);
+export const loggedInEmail = ref<string>("");
+
+// Reactive authentication state
+export const isAuthenticated = computed(
+  () => loggedInEmail.value.trim().length > 0,
+);
 
 // Reactive store of the logged-in user's username
 export const loggedInUser = computed(() =>
   formatUserNameFromEmail(loggedInEmail.value),
 );
+
+/**
+ * Fallback error
+ * Generates up to 2 uppercase initials from a contact name for avatar fallbacks
+ */
+export function getInitials(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return "?";
+  const parts = trimmed.split(/\s+/);
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+  return trimmed[0].toUpperCase();
+}
