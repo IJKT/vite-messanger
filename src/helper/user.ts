@@ -1,11 +1,8 @@
 import { ref, computed } from "vue";
 
-// TODO: will be removed after implementing proper authentication and page guards
-export const DEFAULT_USER_EMAIL = "chris_evans@gmail.com";
-
 // Updates the logged in user with the email used during login
 export function setLoggedInUser(email?: string) {
-  loggedInEmail.value = email || DEFAULT_USER_EMAIL;
+  loggedInEmail.value = email?.trim() || "";
 }
 
 // Formats an email into a display username (Title Case)
@@ -23,7 +20,12 @@ export function formatUserNameFromEmail(email?: string): string {
 }
 
 // Reactive store of the logged-in user's email
-export const loggedInEmail = ref<string>(DEFAULT_USER_EMAIL);
+export const loggedInEmail = ref<string>("");
+
+// Reactive authentication state
+export const isAuthenticated = computed(
+  () => loggedInEmail.value.trim().length > 0,
+);
 
 // Reactive store of the logged-in user's username
 export const loggedInUser = computed(() =>
