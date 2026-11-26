@@ -22,6 +22,11 @@
 
 **Vite Messenger** is a portfolio web application to demonstrate a clean, modern, and responsive chat interface using Vue 3, Pinia, and Tailwind CSS. It focuses on a distraction-free messaging experience where users can jump straight in, browse conversations, search contacts, and send messages in under a minute.
 
+**Sources & References:**
+
+- Starter codebase: [StackBlitz (vitejs-vite-mtxxjkdw)](https://stackblitz.com/edit/vitejs-vite-mtxxjkdw)
+- UI design & specification: [Whimsical — Gradin Test JS Developer](https://whimsical.com/gradin-test-js-developer-GiuAkmRjYtJY1imrY5zMJo)
+
 ---
 
 ## ✍️ Authors
