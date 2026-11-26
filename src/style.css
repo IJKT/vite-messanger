@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  color-scheme: dark;
+}
+
 @theme {
   /* Light Mode Palette */
   --color-brand-blue: #2e6eb6;

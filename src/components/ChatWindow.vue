@@ -1,13 +1,13 @@
 <template>
-  <div class="h-full flex flex-col bg-white relative">
+  <div class="h-full flex flex-col bg-white dark:bg-brand-bg-dark relative">
     <!-- HEADER -->
     <header
-      class="h-15 px-3 md:px-4 border-b border-slate-200/80 shrink-0 bg-white/95 backdrop-blur z-20 flex items-center gap-3"
+      class="h-15 px-3 md:px-4 border-b border-slate-200/80 dark:border-brand-deep-tint shrink-0 bg-white/95 dark:bg-brand-bg-dark/95 backdrop-blur z-20 flex items-center gap-3"
     >
       <!-- Back Navigation Button (mobile only) -->
       <button
         type="button"
-        class="md:hidden p-2 rounded-full text-slate-600 hover:text-brand-blue hover:bg-brand-subtle transition-colors cursor-pointer focus:outline-none"
+        class="md:hidden p-2 rounded-full text-slate-600 dark:text-brand-text-muted-dark hover:text-brand-blue dark:hover:text-brand-accent hover:bg-brand-subtle dark:hover:bg-brand-deep-tint cursor-pointer focus:outline-none"
         title="Back to Chats"
         @click="emit('back')"
       >
@@ -30,7 +30,7 @@
       <!-- Contact Avatar -->
       <div v-if="currentContact" class="relative shrink-0">
         <div
-          class="w-10 h-10 rounded-full overflow-hidden bg-brand-subtle border border-slate-200 flex items-center justify-center shadow-sm"
+          class="w-10 h-10 rounded-full overflow-hidden bg-brand-subtle dark:bg-brand-deep-tint border border-slate-200 dark:border-brand-accent/25 flex items-center justify-center shadow-sm"
         >
           <img
             v-if="currentContact.avatar && !currentContact.hasAvatarError"
@@ -39,7 +39,10 @@
             class="w-full h-full object-cover"
             @error="handleAvatarError"
           />
-          <span v-else class="text-xs font-bold text-brand-blue">
+          <span
+            v-else
+            class="text-xs font-bold text-brand-blue dark:text-brand-accent"
+          >
             {{ getInitials(currentContact.name) }}
           </span>
         </div>
@@ -48,7 +51,7 @@
       <!-- Contact Name -->
       <div class="flex-1 min-w-0">
         <h2
-          class="text-base font-bold text-brand-text-dark truncate leading-tight select-none"
+          class="text-base font-bold text-brand-text-dark dark:text-brand-text-light truncate leading-tight select-none"
         >
           {{ currentContact?.name || "Chat not found" }}
         </h2>
@@ -58,14 +61,14 @@
     <!-- Fallback if invalid chatId is provided -->
     <div
       v-if="!currentContact"
-      class="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50"
+      class="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50 dark:bg-brand-bg-dark"
     >
-      <p class="text-sm text-slate-500 mb-3">
+      <p class="text-sm text-slate-500 dark:text-brand-text-muted-dark mb-3">
         This conversation could not be found.
       </p>
       <button
         type="button"
-        class="px-4 py-2 rounded-lg bg-brand-blue text-white text-sm font-medium hover:bg-brand-blue-hover transition-colors cursor-pointer"
+        class="px-4 py-2 rounded-lg bg-brand-blue dark:bg-brand-accent text-white text-sm font-medium hover:bg-brand-blue-hover dark:hover:bg-brand-accent-hover cursor-pointer"
         @click="emit('back')"
       >
         Back to Chats
@@ -76,7 +79,7 @@
       <!-- Message History Thread -->
       <div
         ref="messagesContainerRef"
-        class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-3.5 bg-slate-50/50"
+        class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-3.5 bg-slate-50/50 dark:bg-brand-bg-dark"
       >
         <template v-if="messagesList.length > 0">
           <div
@@ -90,18 +93,20 @@
             <!-- Outgoing Message Bubble (Sent by me) -->
             <div
               v-if="msg.isSentByMe"
-              class="rounded-2xl rounded-tr-xs bg-[#4c1d95] text-white p-3 shadow-sm border border-purple-900/30 w-full"
+              class="rounded-2xl rounded-tr-xs bg-brand-blue dark:bg-brand-accent-hover text-white dark:text-brand-text-light p-3 shadow-sm border border-brand-blue-hover/30 dark:border-brand-accent/40 w-full"
             >
               <div class="flex items-baseline justify-between gap-3 mb-1">
-                <span class="text-xs font-semibold text-purple-200/90 truncate">
+                <span
+                  class="text-xs font-semibold text-brand-subtle/90 truncate"
+                >
                   {{ loggedInUser }}
                 </span>
-                <span class="text-[11px] text-purple-200/70 shrink-0">
+                <span class="text-[11px] text-brand-subtle/75 shrink-0">
                   {{ msg.timestamp }}
                 </span>
               </div>
               <p
-                class="text-sm text-purple-50 wrap-break-word whitespace-pre-wrap"
+                class="text-sm text-brand-bg-light dark:text-brand-text-light wrap-break-word whitespace-pre-wrap"
               >
                 {{ msg.text }}
               </p>
@@ -110,18 +115,22 @@
             <!-- Incoming Message Bubble (Received from contact) -->
             <div
               v-else
-              class="rounded-2xl rounded-tl-xs bg-white text-brand-text-dark p-3 shadow-xs border border-slate-200/80 w-full"
+              class="rounded-2xl rounded-tl-xs bg-white dark:bg-brand-deep-tint text-brand-text-dark dark:text-brand-text-light p-3 shadow-xs border border-slate-200/80 dark:border-brand-accent/20 w-full"
             >
               <div class="flex items-baseline justify-between gap-3 mb-1">
-                <span class="text-xs font-semibold text-purple-700 truncate">
+                <span
+                  class="text-xs font-semibold text-brand-blue dark:text-brand-accent truncate"
+                >
                   {{ msg.senderName }}
                 </span>
-                <span class="text-[11px] text-slate-400 shrink-0">
+                <span
+                  class="text-[11px] text-slate-400 dark:text-brand-text-muted-dark shrink-0"
+                >
                   {{ msg.timestamp }}
                 </span>
               </div>
               <p
-                class="text-sm text-slate-700 wrap-break-word whitespace-pre-wrap"
+                class="text-sm text-slate-700 dark:text-brand-text-light/95 wrap-break-word whitespace-pre-wrap"
               >
                 {{ msg.text }}
               </p>
@@ -134,28 +143,30 @@
           v-else
           class="flex-1 flex flex-col items-center justify-center py-20 text-center select-none"
         >
-          <p class="text-sm text-slate-400">No messages yet. Say hello!</p>
+          <p class="text-sm text-slate-400 dark:text-brand-text-muted-dark">
+            No messages yet. Say hello!
+          </p>
         </div>
       </div>
 
       <!-- BOTTOM INPUT BAR -->
       <footer
-        class="shrink-0 bg-white/95 backdrop-blur border-t border-slate-200/80 p-3 px-4 z-20"
+        class="shrink-0 bg-white/95 dark:bg-brand-bg-dark/95 backdrop-blur border-t border-slate-200/80 dark:border-brand-deep-tint p-3 px-4 z-20"
       >
         <form
-          class="flex items-center gap-2 bg-slate-100 hover:bg-slate-100/90 focus-within:bg-white focus-within:border-purple-300 focus-within:ring-2 focus-within:ring-purple-500/20 border border-transparent rounded-full px-4 py-2 transition-all"
+          class="flex items-center gap-2 bg-slate-100 dark:bg-brand-deep-tint/70 hover:bg-slate-100/90 dark:hover:bg-brand-deep-tint focus-within:bg-white dark:focus-within:bg-brand-deep-tint focus-within:border-brand-blue/40 dark:focus-within:border-brand-accent/50 focus-within:ring-2 focus-within:ring-brand-blue/20 dark:focus-within:ring-brand-accent/25 border border-transparent rounded-full px-4 py-2"
           @submit.prevent="handleSend"
         >
           <input
             v-model="inputText"
             type="text"
             placeholder="Type your message here"
-            class="flex-1 bg-transparent text-sm text-brand-text-dark placeholder:text-slate-400 focus:outline-none"
+            class="flex-1 bg-transparent text-sm text-brand-text-dark dark:text-brand-text-light placeholder:text-slate-400 dark:placeholder:text-brand-text-muted-dark focus:outline-none"
           />
           <button
             type="submit"
             :disabled="!inputText.trim()"
-            class="p-1 text-purple-600 hover:text-purple-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shrink-0"
+            class="p-1 text-brand-blue hover:text-brand-blue-hover dark:text-brand-accent dark:hover:text-brand-accent-hover disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer shrink-0"
             title="Send message"
           >
             <svg
