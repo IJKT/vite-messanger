@@ -1,52 +1,64 @@
-# Test
+# Vite Messenger
 
-Contoh desain aplikasi: https://gradin.co.id/test/vue/mockup
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-4.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 
-## Guidelines:
+---
 
-1. General
-   - Menggunakan Vue 3 + TypeScript + TailwindCSS
-   - Tidak perlu simpan chat ke localstorage, tidak masalah chat hilang saat di refresh.
-   - UI program pakai bahasa inggris
-   - Warna theme, nama & logo aplikasi terserah, hias sebagus mungkin, buat kita bilang "Wow".
-   - Gambar profile pakai gambar random person generator (misal: https://randomuser.me).
-   - Fitur boleh lebih lengkap daripada contoh desain, tapi tidak boleh kurang.
-2. Halaman Login
-   - Pertama buka aplikasi tampilkan halaman login
-   - Pakai email & password, login selalu berhasil,
-   - Nama user = email sebelum @, tampilkan dengan title case
-   - Misal email chris_evans@example.com, berarti nama user adalah Chris Evans
-   - Hanya bisa login kalau email dan password diisi
-3. Halaman daftar Chat
-   - Tambahkan dummy minimum 20 chat (biar kelihatan penuh sampai bisa vertical scroll, boleh randomly generated, boleh hardcode)
-   - Tidak perlu group chat, hanya chat perorangan saja
-   - Tampilkan jumlah pesan belum dibaca
-   - Format waktu:
-     - Kurang dari 1 menit tampilkan "just now",
-     - Hari yg sama, tampilkan HH:mm (e.g 13:05)
-     - Beda hari, tampilkan d Mmm (e.g 10 Oct)
-   - Search: berdasarkan nama user, tampilkan hasil search setiap kali keyword berubah (tidak perlu pencet enter / submit)
-4. Halaman detail chat
-   - Ketik pesan lalu enter untuk submit chat
-   - Pesan yang diketik sendiri muncul sebagai bubble chat di sebelah kanan
-   - Update juga kalimat chat di halaman daftar chat (dibawah nama user)
-   - Tampilkan nama user di atas chat dan jam pesan dibuat.
+## 🌟 Highlights
 
-## Fitur Vue yang wajib dipakai:
+- **Zero-Config State:** Runs entirely in-memory with **Pinia**—no database, backend, or `localStorage` required.
+- **Instant Login Flow:** Sign in with any email and password; your display name is automatically formatted in Title Case from your email prefix.
+- **Responsive Split-Pane UI:** Seamless single-column navigation on mobile and a dual-pane sidebar + chat view on desktop.
+- **Real-Time Contact Search:** Filter conversations by contact name as you type.
+- **Light & Dark Mode:** Toggle themes right from the chat sidebar header.
+- **Rich Chat Details:** Pre-seeded with 20+ conversations, unread message badges, smart timestamps (`just now`, `HH:mm`, `d Mmm`), and live sidebar previews.
 
-- script setup
-- defineProps
-- defineEmits
-- computed
-- watch
-- vue router ✅
-- pinia
+---
 
-## Nilai tambah jika bisa:
+## ℹ️ Overview
 
-- responsive
-- unit test
+**Vite Messenger** is a portfolio web application to demonstrate a clean, modern, and responsive chat interface using Vue 3, Pinia, and Tailwind CSS. It focuses on a distraction-free messaging experience where users can jump straight in, browse conversations, search contacts, and send messages in under a minute.
 
-## Disclaimer:
+---
 
-Proyek ini hanyalah fiktif belaka. Desain yang Anda submit menjadi milik Anda sepenuhnya. Silakan digunakan sebagai portfolio untuk melamar ke perusahaan lain atau menjadi proyek Anda sendiri.
+## ✍️ Authors
+
+- **Ishak** — [@IJKT](https://github.com/IJKT)
+
+---
+
+## 🚀 Usage
+
+Start the local development server and open the app in your browser:
+
+```bash
+npm run dev
+```
+
+Or build and preview the production bundle:
+
+```bash
+npm run build && npm run preview
+```
+
+Once open, enter any email (e.g., `chris_evans@example.com`) and password to log in as **Chris Evans**, pick a conversation, and start chatting.
+
+---
+
+## ⬇️ Installation
+
+### Requirements
+
+- [Node.js](https://nodejs.org/) (v18+ recommended) and `npm`
+- Any modern web browser (Chrome, Edge, Firefox, or Safari)
+
+### Setup
+
+```bash
+git clone https://github.com/IJKT/vite-messanger.git
+cd vite-messanger
+npm install
+```
