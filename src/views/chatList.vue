@@ -3,9 +3,7 @@
     class="min-h-screen bg-brand-bg-light text-brand-text-dark flex justify-center"
   >
     <!-- Main Mobile Container -->
-    <div
-      class="w-full max-w-md min-h-screen flex flex-col bg-white border-x border-slate-200/80 shadow-sm"
-    >
+    <div class="w-full max-w-md min-h-screen flex flex-col bg-white">
       <!-- HEADER (Fixed height to prevent any layout shift) -->
       <header
         class="h-15 px-4 border-b border-slate-200/80 sticky top-0 bg-white/95 backdrop-blur z-20 flex items-center justify-between gap-3"
@@ -187,17 +185,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from "vue";
-import { dummyChats, type ChatItem } from "../data/dummyData";
+import { ref, computed, nextTick } from "vue";
+import { useRouter } from "vue-router";
+import { useChatStore } from "../helper/chatStore";
+import type { ChatItem } from "../helper/dummyData";
 
-// Import dummy chat data
-const chats = ref<ChatItem[]>(dummyChats);
+const router = useRouter();
+const chatStore = useChatStore();
+
+// Reactive chat data from store
+const chats = computed(() => chatStore.chats);
 
 // Search state
 const isSearchOpen = ref(false);
 const searchQuery = ref("");
 const searchInputRef = ref<HTMLInputElement | null>(null);
-const isLoadingAvatars = ref(false);
 
 // Real-time filter based on every typedown keystroke (strictly matching contact name)
 const filteredChats = computed(() => {
@@ -239,51 +241,9 @@ function getInitials(name: string): string {
 }
 
 function selectChat(chat: ChatItem) {
-  // Mark as read when clicked
-  if (chat.unreadCount && chat.unreadCount > 0) {
-    chat.unreadCount = 0;
-  }
+  chatStore.markAsRead(chat.id);
+  router.push({ name: "ChatDetail", params: { id: chat.id } });
 }
-
-// Random avatar fetching with graceful fallback
-async function fetchRandomUserAvatars() {
-  if (isLoadingAvatars.value) return;
-  isLoadingAvatars.value = true;
-  try {
-    const response = await fetch(
-      `https://randomuser.me/api/?results=${chats.value.length}&inc=picture`,
-    );
-    if (!response.ok) return;
-    const data = await response.json();
-    if (data.results && Array.isArray(data.results)) {
-      data.results.forEach(
-        (
-          user: { picture?: { large?: string; medium?: string } },
-          index: number,
-        ) => {
-          if (chats.value[index]) {
-            const pic = user.picture?.large || user.picture?.medium;
-            if (pic) {
-              chats.value[index].avatar = pic;
-              chats.value[index].hasAvatarError = false;
-            }
-          }
-        },
-      );
-    }
-  } catch (error) {
-    console.warn(
-      "Could not reach randomuser.me API, using seeded avatars:",
-      error,
-    );
-  } finally {
-    isLoadingAvatars.value = false;
-  }
-}
-
-onMounted(() => {
-  fetchRandomUserAvatars();
-});
 </script>
 
 <style scoped></style>

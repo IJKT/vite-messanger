@@ -142,6 +142,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { setLoggedInUser } from "../helper/user";
 
 const router = useRouter();
 
@@ -165,8 +166,10 @@ const isFormValid = computed(() => {
   return isEmailValid.value && isPasswordValid.value;
 });
 
+// Handle login form submission, sends the email to user.ts
 function handleLogin() {
   if (isFormValid.value) {
+    setLoggedInUser(email.value);
     router.push({ name: "ChatList" });
   }
 }
