@@ -29,3 +29,17 @@ export const loggedInEmail = ref<string>(DEFAULT_USER_EMAIL);
 export const loggedInUser = computed(() =>
   formatUserNameFromEmail(loggedInEmail.value),
 );
+
+/**
+ * Fallback error
+ * Generates up to 2 uppercase initials from a contact name for avatar fallbacks
+ */
+export function getInitials(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return "?";
+  const parts = trimmed.split(/\s+/);
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+  return trimmed[0].toUpperCase();
+}

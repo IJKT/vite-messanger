@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../views/login.vue";
-import ChatList from "../views/chatList.vue";
-import ChatDetail from "../views/chatDetail.vue";
+import ChatView from "../views/chatView.vue";
 
 const routes = [
   {
@@ -12,14 +11,12 @@ const routes = [
   {
     path: "/chat",
     name: "ChatList",
-    component: ChatList,
+    component: ChatView,
   },
   {
     path: "/chat/:id",
     name: "ChatDetail",
-    component: ChatDetail,
-    // to pass the chatId as a prop to the ChatDetail component
-    props: true,
+    component: ChatView,
   },
 ];
 

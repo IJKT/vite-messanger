@@ -1,74 +1,88 @@
 <template>
-  <div
-    class="min-h-screen bg-brand-bg-light text-brand-text-dark flex justify-center"
-  >
-    <!-- Main Mobile Container -->
-    <div class="w-full max-w-md min-h-screen flex flex-col bg-white relative">
-      <!-- HEADER -->
-      <header
-        class="h-15 px-3 border-b border-slate-200/80 sticky top-0 bg-white/95 backdrop-blur z-20 flex items-center gap-3"
+  <div class="h-full flex flex-col bg-white relative">
+    <!-- HEADER -->
+    <header
+      class="h-15 px-3 md:px-4 border-b border-slate-200/80 shrink-0 bg-white/95 backdrop-blur z-20 flex items-center gap-3"
+    >
+      <!-- Back Navigation Button (mobile only) -->
+      <button
+        type="button"
+        class="md:hidden p-2 rounded-full text-slate-600 hover:text-brand-blue hover:bg-brand-subtle transition-colors cursor-pointer focus:outline-none"
+        title="Back to Chats"
+        @click="emit('back')"
       >
-        <!-- Back Navigation Button -->
-        <button
-          type="button"
-          @click="goBack"
-          class="p-2 rounded-full text-slate-600 hover:text-brand-blue hover:bg-brand-subtle transition-colors cursor-pointer focus:outline-none"
-          title="Back to Chats"
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
-            />
-          </svg>
-        </button>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+          />
+        </svg>
+      </button>
 
-        <!-- Contact Avatar -->
-        <div class="relative shrink-0">
-          <div
-            class="w-10 h-10 rounded-full overflow-hidden bg-brand-subtle border border-slate-200 flex items-center justify-center shadow-sm"
-          >
-            <img
-              v-if="currentContact?.avatar && !currentContact?.hasAvatarError"
-              :src="currentContact.avatar"
-              :alt="currentContact?.name || 'Avatar'"
-              class="w-full h-full object-cover"
-              @error="handleAvatarError"
-            />
-            <span v-else class="text-xs font-bold text-brand-blue">
-              {{ getInitials(currentContact?.name || "") }}
-            </span>
-          </div>
+      <!-- Contact Avatar -->
+      <div v-if="currentContact" class="relative shrink-0">
+        <div
+          class="w-10 h-10 rounded-full overflow-hidden bg-brand-subtle border border-slate-200 flex items-center justify-center shadow-sm"
+        >
+          <img
+            v-if="currentContact.avatar && !currentContact.hasAvatarError"
+            :src="currentContact.avatar"
+            :alt="currentContact.name"
+            class="w-full h-full object-cover"
+            @error="handleAvatarError"
+          />
+          <span v-else class="text-xs font-bold text-brand-blue">
+            {{ getInitials(currentContact.name) }}
+          </span>
         </div>
+      </div>
 
-        <!-- Contact Name -->
-        <div class="flex-1 min-w-0">
-          <h1
-            class="text-base font-bold text-brand-text-dark truncate leading-tight select-none"
-          >
-            {{ currentContact?.name || "Chat" }}
-          </h1>
-        </div>
-      </header>
+      <!-- Contact Name -->
+      <div class="flex-1 min-w-0">
+        <h2
+          class="text-base font-bold text-brand-text-dark truncate leading-tight select-none"
+        >
+          {{ currentContact?.name || "Chat not found" }}
+        </h2>
+      </div>
+    </header>
 
+    <!-- Fallback if invalid chatId is provided -->
+    <div
+      v-if="!currentContact"
+      class="flex-1 flex flex-col items-center justify-center p-6 text-center bg-slate-50/50"
+    >
+      <p class="text-sm text-slate-500 mb-3">
+        This conversation could not be found.
+      </p>
+      <button
+        type="button"
+        class="px-4 py-2 rounded-lg bg-brand-blue text-white text-sm font-medium hover:bg-brand-blue-hover transition-colors cursor-pointer"
+        @click="emit('back')"
+      >
+        Back to Chats
+      </button>
+    </div>
+
+    <template v-else>
       <!-- Message History Thread -->
       <div
         ref="messagesContainerRef"
-        class="flex-1 overflow-y-auto p-4 flex flex-col gap-3.5 bg-slate-50/50"
+        class="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col gap-3.5 bg-slate-50/50"
       >
         <template v-if="messagesList.length > 0">
           <div
             v-for="msg in messagesList"
             :key="msg.id"
-            class="flex flex-col max-w-[82%] leading-snug"
+            class="flex flex-col max-w-[82%] md:max-w-[70%] leading-snug"
             :class="
               msg.isSentByMe ? 'self-end items-end' : 'self-start items-start'
             "
@@ -126,11 +140,11 @@
 
       <!-- BOTTOM INPUT BAR -->
       <footer
-        class="sticky bottom-0 bg-white/95 backdrop-blur border-t border-slate-200/80 p-3 px-4 z-20"
+        class="shrink-0 bg-white/95 backdrop-blur border-t border-slate-200/80 p-3 px-4 z-20"
       >
         <form
-          @submit.prevent="handleSend"
           class="flex items-center gap-2 bg-slate-100 hover:bg-slate-100/90 focus-within:bg-white focus-within:border-purple-300 focus-within:ring-2 focus-within:ring-purple-500/20 border border-transparent rounded-full px-4 py-2 transition-all"
+          @submit.prevent="handleSend"
         >
           <input
             v-model="inputText"
@@ -144,7 +158,6 @@
             class="p-1 text-purple-600 hover:text-purple-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shrink-0"
             title="Send message"
           >
-            <!-- Paper Plane Send Icon matching wireframe -->
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5 fill-current -translate-y-0.5"
@@ -155,38 +168,33 @@
           </button>
         </form>
       </footer>
-    </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, computed, watch, nextTick } from "vue";
 import { type Message } from "../helper/messagesData";
 import { useChatStore } from "../helper/chatStore";
-import { loggedInUser } from "../helper/user";
+import { loggedInUser, getInitials } from "../helper/user";
 
-const route = useRoute();
-const router = useRouter();
+const props = defineProps<{
+  chatId: number;
+}>();
+
+const emit = defineEmits<{
+  (e: "back"): void;
+}>();
+
 const chatStore = useChatStore();
 
-const chatId = computed(() => Number(route.params.id));
-const currentContact = computed(() => chatStore.getChatById(chatId.value));
+const currentContact = computed(() => chatStore.getChatById(props.chatId));
 const messagesList = computed<Message[]>(() =>
-  chatStore.getMessagesForChat(chatId.value),
+  chatStore.getMessagesForChat(props.chatId),
 );
 
 const inputText = ref("");
 const messagesContainerRef = ref<HTMLDivElement | null>(null);
-
-function getInitials(name: string): string {
-  if (!name) return "?";
-  const parts = name.trim().split(" ");
-  if (parts.length >= 2) {
-    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
-  }
-  return (name[0] || "?").toUpperCase();
-}
 
 function handleAvatarError() {
   if (currentContact.value) {
@@ -209,19 +217,18 @@ function handleSend() {
   const text = inputText.value.trim();
   if (!text) return;
 
-  chatStore.sendMessage(chatId.value, text);
+  chatStore.sendMessage(props.chatId, text);
   inputText.value = "";
   scrollToBottom(true);
 }
 
-function goBack() {
-  router.push({ name: "ChatList" });
-}
-
-onMounted(() => {
-  chatStore.markAsRead(chatId.value);
-  scrollToBottom(false);
-});
+watch(
+  () => props.chatId,
+  (newId) => {
+    chatStore.markAsRead(newId);
+    inputText.value = "";
+    scrollToBottom(false);
+  },
+  { immediate: true },
+);
 </script>
-
-<style scoped></style>
